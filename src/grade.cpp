@@ -6,11 +6,8 @@ grade::grade()
 {	
 	NumOfGradeDatas++;
 	// this is a highly sophisticated constructor
-	
-
-
-	
 }
+
 void grade::print()
 {
 	std::cout 	<< "Subject ID: " << subject_id

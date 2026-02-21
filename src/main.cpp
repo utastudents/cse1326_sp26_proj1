@@ -3,10 +3,10 @@
 #include "grade.hpp"
 #include "dataImporter.hpp"
 
+
+Grades GradesArray;
 int main(int argc, char* argv[])
 {
-
-	std::array<grade,10000> Grades;
 
 	//grade G{}; // this is just done so that the compiler
 		   // will read it and check for errors.  it is
@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 	//unsigned int maxSizeOfArray=100; // as does this
         //unsigned int num = DI.readFromFile(filename,arrayOfgrades,maxSizeofArray);	
 
-	DI.load(Grades);
+	DI.load(GradesArray);
 
 	// perhaps here we need to do some processing.  or maybe it is done
 	// after each command???
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	{
 		std::string cmd;
 		std::cin >> cmd;
-		Grades[stoi(cmd)].print();
+		GradesArray[stoi(cmd)].print();
 		std::cout << "\nNumber of grade datas: " << grade::NumOfGradeDatas << std::endl;
 	}
 

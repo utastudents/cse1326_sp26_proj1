@@ -1,16 +1,14 @@
 // This class holds the grade date for one course.
 #pragma once
-
 #include <string>
 #include <iostream>
 
-
-struct GradeCounts{
+struct GradeCounts
+{
 	int A,B,C,D,F,I,P,Q,W,Z,R;
 };
 
-
-	struct grade
+struct grade
 {
 	static int NumOfGradeDatas;
 	grade();
@@ -32,7 +30,4 @@ struct GradeCounts{
 	std::string instructor5;
 	double course_gpa;
 	double drop_percent;
-
-
-
 };
