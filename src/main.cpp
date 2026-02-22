@@ -37,6 +37,8 @@ int main(int argc, char* argv[])
 		std::cout << "\nNumber of grade datas: " << grade::NumOfGradeDatas << std::endl;
 	}
 
+	printWeedoutStatistics(GradesArray);
+
 	// clean up
 	return 0;
 }
