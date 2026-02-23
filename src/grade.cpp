@@ -8,6 +8,11 @@ grade::grade()
 	// this is a highly sophisticated constructor
 }
 
+grade::~grade()
+{
+	std::cout << "The Destructor is called." << std::endl;
+}
+
 void grade::print()
 {
 	std::cout 	<< "Subject ID: " << subject_id
