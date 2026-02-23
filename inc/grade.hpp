@@ -12,6 +12,7 @@ struct grade
 {
 	static int NumOfGradeDatas;
 	grade();
+	~grade();
 	void print();
 	
 	std::string subject_id;
