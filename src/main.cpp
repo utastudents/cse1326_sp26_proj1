@@ -2,6 +2,7 @@
 #include <string>
 #include "grade.hpp"
 #include "dataImporter.hpp"
+#include "weedout.hpp"
 
 
 Grades GradesArray;
@@ -27,17 +28,65 @@ int main(int argc, char* argv[])
 	// after each command???
 
 
-        // create the commandProcessor
+	// command processor
 	std::cout << "Welcome to the command line MavGrades" << std::endl;
-	// while input commands are OK, process the commands
-	{
-		std::string cmd;
-		std::cin >> cmd;
-		GradesArray[stoi(cmd)].print();
-		std::cout << "\nNumber of grade datas: " << grade::NumOfGradeDatas << std::endl;
-	}
 
-	printWeedoutStatistics(GradesArray);
+	std::string cmd;
+	// keep looping until user wants to quit
+	while(true)
+	{
+		std::cout << "> ";
+		std::cin >> cmd;
+
+		// check if user wants to exit
+		if(cmd == "quit" || cmd == "exit")
+		{
+			break;
+		}
+		// course command - search for a course
+		else if(cmd == "course")
+		{
+			std::string subject;
+			int number;
+			std::cin >> subject >> number;
+
+			bool found = false;
+			// go through all the grades and find matching ones
+			for(int i = 0; i < 10000; i++)
+			{
+				// stop if we hit empty records
+				if(GradesArray[i].subject_id.empty())
+					break;
+
+				if(GradesArray[i].subject_id == subject && GradesArray[i].course_number == number)
+				{
+					GradesArray[i].print();
+					std::cout << "-------------------" << std::endl;
+					found = true;
+				}
+			}
+			if(!found)
+				std::cout << "No results found for " << subject << " " << number << std::endl;
+		}
+		// weedout command
+		else if(cmd == "weedout")
+		{
+			printWeedoutStatistics(GradesArray);
+		}
+		// help command
+		else if(cmd == "help")
+		{
+			std::cout << "Commands:" << std::endl;
+			std::cout << "  course <SUBJECT> <NUMBER>  - search for a course (ex: course CSE 1320)" << std::endl;
+			std::cout << "  weedout                    - show weedout statistics" << std::endl;
+			std::cout << "  help                       - show this help message" << std::endl;
+			std::cout << "  quit                       - exit the program" << std::endl;
+		}
+		else
+		{
+			std::cout << "Unknown command. Type 'help' for a list of commands." << std::endl;
+		}
+	}
 
 	// clean up
 	return 0;
