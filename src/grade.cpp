@@ -10,7 +10,7 @@ grade::grade()
 
 grade::~grade()
 {
-	std::cout << "The Destructor is called." << std::endl;
+	
 }
 
 void grade::print()
