@@ -1,8 +1,9 @@
-#include <iostream>
-#include <string>
 #include "grade.hpp"
 #include "dataImporter.hpp"
 #include "gradeAnalyzer.hpp"
+
+#include <iostream>
+#include <string>
 
 // ulimit -s unlimited
 // ^ here just incase
@@ -60,12 +61,21 @@ int main(int argc, char* argv[])
 		else if(cmd == "weedout")
 		{
 			gradeAnalyzer a(gradesArray);
+			std::string A;
+			std::string B;
+			std::cin >> A >> B;
+			a.printCourse();
+			a.printCourse(A);
+			a.printCourse(A,B);
+			
 		}
 		// help command
 		else if(cmd == "help")
 		{
 			std::cout << "Commands:" << std::endl;
-			std::cout << "  course <SUBJECT> <NUMBER>  - search for a course (ex: course CSE 1320)" << std::endl;
+			std::cout << "  course          		   - search for a subject  (ex: course)" << std::endl;
+			std::cout << "  course <SUBJECT>           - search for a course   (ex: course MATH)" << std::endl;
+			std::cout << "  course <SUBJECT> <NUMBER>  - search for a section  (ex: course CSE 1320)" << std::endl;
 			std::cout << "  weedout                    - show weedout statistics" << std::endl;
 			std::cout << "  help                       - show this help message" << std::endl;
 			std::cout << "  quit                       - exit the program" << std::endl;

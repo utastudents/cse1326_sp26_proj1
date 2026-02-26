@@ -9,23 +9,23 @@
 
 struct gradeAnalyzer{
 
-    gradeAnalyzer(const std::array<grade, AllGradesArraySize> &gradesArr);
+    gradeAnalyzer( std::array<grade, AllGradesArraySize>& gradesArr);
     
     void printCourse(); //prints subjects
     void printCourse(std::string SubjectID); //prints course numbers within subjectID
     void printCourse(std::string SubjectID, std::string CourseNumber); //prints all sections within
 
     //the flunkers AKA <C grade
-    void findWeedOuts(); //prints SubjectID list
-    void findWeedOuts(std::string SubjectID); //prints CourseNumber list
-    void findWeedOuts(std::string SubjectID, std::string CourseNumber);//prints section number and term list
+    void findWeedOuts(); //prints overall lowest
+    void findWeedOuts(std::string SubjectID); //prints lowest within Subject
+    void findWeedOuts(std::string SubjectID, std::string CourseNumber);//prints lowest within course
     //opposite of weedOuts >=C
-    void findExemplary(); //prints SubjectID list
-    void findExemplary(std::string SubjectID); //prints CourseNumber list
-    void findExemplary(std::string SubjectID, std::string CourseNumber);//prints section number and term list
+    void findExemplary(); //prints highest overall
+    void findExemplary(std::string SubjectID); //prints highest within subject
+    void findExemplary(std::string SubjectID, std::string CourseNumber);//prints highest within course 
 
-    std::array<grade, AllGradesArraySize> m_gradesArray;
-    std::array<bool, AllGradesArraySize> checked; //to prevent unnesscary checking
+    std::array<grade, AllGradesArraySize>& m_gradesArray; //reference to main grade array
+    //no need for checked boolean array with the way were processing stuff
 };
 // there are 134 unique subject ids
 // 3753 unique course numbers
