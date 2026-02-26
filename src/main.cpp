@@ -2,16 +2,20 @@
 #include <string>
 #include "grade.hpp"
 #include "dataImporter.hpp"
-#include "weedout.hpp"
+#include "gradeAnalyzer.hpp"
 
-Grades GradesArray;
+// ulimit -s unlimited
+// ^ here just incase
+// probably have to use it for now until we get Prof Davis' diagnosis
+
+std::array<grade, AllGradesArraySize> gradesArray;
 
 int main(int argc, char* argv[])
 {
 	// create a dataImporter
 	std::string filename = "allgradedata.json";
 	dataImporter DI(filename);  // DI is Data Importer....
-	DI.load(GradesArray); // Copys Data into array of grade
+	DI.load(gradesArray); // Copys Data into array of grade
 
 	// command processor
 	std::cout << "Welcome to the command line MavGrades" << std::endl;
@@ -31,7 +35,7 @@ int main(int argc, char* argv[])
 		else if(cmd == "course")
 		{
 			std::string subject;
-			int number;
+			std::string number;
 			std::cin >> subject >> number;
 
 			bool found = false;
@@ -39,12 +43,12 @@ int main(int argc, char* argv[])
 			for(int i = 0; i < 10000; i++)
 			{
 				// stop if we hit empty records
-				if(GradesArray[i].subject_id.empty())
+				if(gradesArray[i].subject_id.empty())
 					break;
 
-				if(GradesArray[i].subject_id == subject && GradesArray[i].course_number == number)
+				if(gradesArray[i].subject_id == subject && gradesArray[i].course_number == number)
 				{
-					GradesArray[i].print();
+					gradesArray[i].print();
 					std::cout << "-------------------" << std::endl;
 					found = true;
 				}
@@ -55,7 +59,7 @@ int main(int argc, char* argv[])
 		// weedout command
 		else if(cmd == "weedout")
 		{
-			//printWeedoutStatistics(GradesArray);
+			gradeAnalyzer a(gradesArray);
 		}
 		// help command
 		else if(cmd == "help")

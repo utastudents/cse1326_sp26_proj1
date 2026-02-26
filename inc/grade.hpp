@@ -1,5 +1,6 @@
 // This class holds the grade date for one course.
 #pragma once
+
 #include <string>
 #include <iostream>
 
@@ -11,13 +12,15 @@ struct GradeCounts
 struct grade
 {
 	static int NumOfGradeDatas;
+	
 	grade();
 	grade(bool NEW);
 	~grade();
+	
 	void print();
 	
 	std::string subject_id;
-	int course_number;
+	std::string course_number; //changed to string
     std::string course_title;
 	std::string section_number;
 	GradeCounts grades;

@@ -1,16 +1,21 @@
+#pragma once
+
+#include "json.hpp"
 #include "grade.hpp"
+
+#include <array>
 #include <fstream>
 #include <string>
-#include "json.hpp"
-#include <array>
+
 
 using json = nlohmann::json;
-using Grades = std::array<grade,45108>;
+using AllGradesArray = std::array<grade,45108>;
+const int AllGradesArraySize  = 45108; //renamed to a more defined, to prevent mix ups
 
 struct dataImporter
 {
     dataImporter(const std::string& _filename);
-    void load(Grades& arr);
+    void load(std::array<grade, AllGradesArraySize> &arr);
 
     std::string filename;
     std::ifstream file;

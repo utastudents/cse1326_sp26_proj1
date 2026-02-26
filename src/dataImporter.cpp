@@ -35,7 +35,7 @@ filename(_filename), file(_filename)
         std::cerr << "Failed to open file: " << filename << "\n";
 }
 
-void dataImporter::load(Grades& arr)
+void dataImporter::load(std::array<grade, AllGradesArraySize> &arr)
 {
     json j;
 
@@ -63,7 +63,7 @@ void dataImporter::load(Grades& arr)
             grade g(1);  // constructor increments static counter
 
             g.subject_id = item["subject_id"].get<std::string>();
-            g.course_number = to_int(item["course_number"]);
+            g.course_number = std::to_string(to_int(item["course_number"]));
             g.grades_count  = to_int(item["grades_count"]);
             g.year          = to_int(item["year"]);
             
