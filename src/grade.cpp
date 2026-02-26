@@ -3,9 +3,13 @@
 int grade::NumOfGradeDatas = 0;
 
 grade::grade()
+{
+
+}
+//built with parameter to identify grades not built by a new array 
+grade::grade(bool NEW) 
 {	
 	NumOfGradeDatas++;
-	// this is a highly sophisticated constructor
 }
 
 grade::~grade()

@@ -5,7 +5,7 @@
 #include <array>
 
 using json = nlohmann::json;
-using Grades = std::array<grade,10000>;
+using Grades = std::array<grade,45108>;
 
 struct dataImporter
 {

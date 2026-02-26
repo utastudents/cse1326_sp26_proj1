@@ -12,6 +12,7 @@ struct grade
 {
 	static int NumOfGradeDatas;
 	grade();
+	grade(bool NEW);
 	~grade();
 	void print();
 	

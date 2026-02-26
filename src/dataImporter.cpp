@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 
+//Some pieces of json file 
+//to prevent problems
 auto to_int = [](const json& v)
 {
     if (v.is_number()) 
@@ -11,8 +13,8 @@ auto to_int = [](const json& v)
         return std::stoi(v.get<std::string>());
     return 0;
 };
-
-auto to_double = [](const json& v)
+//to prevent problems 
+auto to_double = [](const json& v) 
 {
     if (v.is_number()) 
     {
@@ -36,7 +38,8 @@ filename(_filename), file(_filename)
 void dataImporter::load(Grades& arr)
 {
     json j;
-    if(!file.is_open())
+
+    if(!file.is_open()) //checking if ifstream file is open
     {
         std::cerr << "File not open\n";
         return;
@@ -52,25 +55,18 @@ void dataImporter::load(Grades& arr)
     }
 
     int count = 0;
-    if(!j.is_array())
-    {
-        std::cerr << "Top-level JSON is not an array\n";
-    }
+
     for (const auto& group : j)
     {
-        if (!group.is_array())
-        {
-            std::cerr << "Group is not an array\n";
-            continue;
-        }
         for (const auto& item : group)
         {
-            grade g;  // constructor increments static counter
+            grade g(1);  // constructor increments static counter
 
             g.subject_id = item["subject_id"].get<std::string>();
             g.course_number = to_int(item["course_number"]);
             g.grades_count  = to_int(item["grades_count"]);
             g.year          = to_int(item["year"]);
+            
             const auto& gr = item["grades"];
 
             g.grades = {
@@ -99,11 +95,6 @@ void dataImporter::load(Grades& arr)
             
             arr[count] = g;   // copy into array
             count++;
-
-            if (count >= 100){
-            std::cout << "overflow prevented\n";
-                return;       // prevent overflow
-            }
         }
     }
 

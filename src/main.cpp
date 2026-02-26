@@ -4,33 +4,17 @@
 #include "dataImporter.hpp"
 #include "weedout.hpp"
 
-
 Grades GradesArray;
+
 int main(int argc, char* argv[])
 {
-
-	//grade G{}; // this is just done so that the compiler
-		   // will read it and check for errors.  it is
-		   // not needed for anything else.
-
 	// create a dataImporter
 	std::string filename = "allgradedata.json";
 	dataImporter DI(filename);  // DI is Data Importer....
-			    
-	// actually import the data into the array
-	//grade AOG[100];                  // this needs to be in the grade header...
-	//unsigned int maxSizeOfArray=100; // as does this
-        //unsigned int num = DI.readFromFile(filename,arrayOfgrades,maxSizeofArray);	
-
-	DI.load(GradesArray);
-
-	// perhaps here we need to do some processing.  or maybe it is done
-	// after each command???
-
+	DI.load(GradesArray); // Copys Data into array of grade
 
 	// command processor
 	std::cout << "Welcome to the command line MavGrades" << std::endl;
-
 	std::string cmd;
 	// keep looping until user wants to quit
 	while(true)
@@ -71,7 +55,7 @@ int main(int argc, char* argv[])
 		// weedout command
 		else if(cmd == "weedout")
 		{
-			printWeedoutStatistics(GradesArray);
+			//printWeedoutStatistics(GradesArray);
 		}
 		// help command
 		else if(cmd == "help")
