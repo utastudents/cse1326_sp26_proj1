@@ -7,9 +7,9 @@
 
 // ulimit -s unlimited
 // ^ here just incase
-// probably have to use it for now until we get Prof Davis' diagnosis
 
 std::array<grade, AllGradesArraySize> gradesArray;
+
 
 int main(int argc, char* argv[])
 {
@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	std::string filename = "allgradedata.json";
 	dataImporter DI(filename);  // DI is Data Importer....
 	DI.load(gradesArray); // Copys Data into array of grade
-
+	gradeAnalyzer analyzer(gradesArray);
 	// command processor
 	std::cout << "Welcome to the command line MavGrades" << std::endl;
 	std::string cmd;
@@ -32,51 +32,54 @@ int main(int argc, char* argv[])
 		{
 			break;
 		}
-		// course command - search for a course
-		else if(cmd == "course")
-		{
-			std::string subject;
-			std::string number;
-			std::cin >> subject >> number;
+		// course command - search for a course // weedout command
+	else if (cmd == "course" || cmd == "weedout" || cmd == "superior")
+	{
+		std::string subjectID;
+		std::string courseNumber;
 
-			bool found = false;
-			// go through all the grades and find matching ones
-			for(int i = 0; i < 10000; i++)
-			{
-				// stop if we hit empty records
-				if(gradesArray[i].subject_id.empty())
-					break;
+		// Try to read the next token, but only if it isn't another command
+		if (std::cin.peek() != '\n')
+			std::cin >> subjectID;
 
-				if(gradesArray[i].subject_id == subject && gradesArray[i].course_number == number)
-				{
-					gradesArray[i].print();
-					std::cout << "-------------------" << std::endl;
-					found = true;
-				}
-			}
-			if(!found)
-				std::cout << "No results found for " << subject << " " << number << std::endl;
-		}
-		// weedout command
-		else if(cmd == "weedout")
+		if (std::cin.peek() != '\n')
+			std::cin >> courseNumber;
+
+		if (cmd == "course")
 		{
-			gradeAnalyzer a(gradesArray);
-			std::string A;
-			std::string B;
-			std::cin >> A >> B;
-			a.printCourse();
-			a.printCourse(A);
-			a.printCourse(A,B);
-			
+			if (!subjectID.empty() && !courseNumber.empty())
+				analyzer.printCourse(subjectID, courseNumber);
+			else if (!subjectID.empty())
+				analyzer.printCourse(subjectID);
+			else
+				analyzer.printCourse();
 		}
+		else if(cmd == "weedout") // weedout
+		{
+			if (!subjectID.empty() && !courseNumber.empty())
+				analyzer.findWeedOuts(subjectID, courseNumber);
+			else if (!subjectID.empty())
+				analyzer.findWeedOuts(subjectID);
+			else
+				analyzer.findWeedOuts();
+		}
+		else{
+			if (!subjectID.empty() && !courseNumber.empty())
+				analyzer.findExemplary(subjectID, courseNumber);
+			else if (!subjectID.empty())
+				analyzer.findExemplary(subjectID);
+			else
+				analyzer.findExemplary();
+		}
+	}
+
 		// help command
 		else if(cmd == "help")
 		{
 			std::cout << "Commands:" << std::endl;
-			std::cout << "  course          		   - search for a subject  (ex: course)" << std::endl;
-			std::cout << "  course <SUBJECT>           - search for a course   (ex: course MATH)" << std::endl;
 			std::cout << "  course <SUBJECT> <NUMBER>  - search for a section  (ex: course CSE 1320)" << std::endl;
 			std::cout << "  weedout                    - show weedout statistics" << std::endl;
+			std::cout << "  superior				   - show exemplary statistics" << std::endl;
 			std::cout << "  help                       - show this help message" << std::endl;
 			std::cout << "  quit                       - exit the program" << std::endl;
 		}

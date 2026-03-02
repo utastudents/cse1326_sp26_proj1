@@ -66,6 +66,7 @@ void dataImporter::load(std::array<grade, AllGradesArraySize> &arr)
             g.course_number = std::to_string(to_int(item["course_number"]));
             g.grades_count  = to_int(item["grades_count"]);
             g.year          = to_int(item["year"]);
+            g.section_number = item["section_number"].get<std::string>();
             
             const auto& gr = item["grades"];
 
