@@ -57,19 +57,19 @@ int main(int argc, char* argv[])
 		else if(cmd == "weedout") // weedout
 		{
 			if (!subjectID.empty() && !courseNumber.empty())
-				analyzer.findWeedOuts(subjectID, courseNumber);
+				analyzer.findPercents(subjectID, courseNumber, 1);
 			else if (!subjectID.empty())
-				analyzer.findWeedOuts(subjectID);
+				analyzer.findPercents(subjectID, 1);
 			else
-				analyzer.findWeedOuts();
+				analyzer.findPercents(1);
 		}
 		else{
 			if (!subjectID.empty() && !courseNumber.empty())
-				analyzer.findExemplary(subjectID, courseNumber);
+				analyzer.findPercents(subjectID, courseNumber, 0);
 			else if (!subjectID.empty())
-				analyzer.findExemplary(subjectID);
+				analyzer.findPercents(subjectID, 0);
 			else
-				analyzer.findExemplary();
+				analyzer.findPercents(0);
 		}
 	}
 

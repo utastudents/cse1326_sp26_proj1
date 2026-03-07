@@ -66,8 +66,13 @@ void dataImporter::load(std::array<grade, AllGradesArraySize> &arr)
             g.course_number = std::to_string(to_int(item["course_number"]));
             g.grades_count  = to_int(item["grades_count"]);
             g.year          = to_int(item["year"]);
-            g.section_number = item["section_number"].get<std::string>();
-            
+            g.semester = item["semester"].get<std::string>();
+            g.section_number = item["section_number"].get<std::string>(); 
+            //yes some section numbers come out different as single digits, thats just how they are in the json
+            g.subCor = g.subject_id + " " + g.course_number;
+            g.subCorSec = g.subCor + " " + g.section_number; 
+            g.subCorSecTermYear = g.subCorSec + " " + g.semester + " " + std::to_string(g.year);
+
             const auto& gr = item["grades"];
 
             g.grades = {
@@ -84,7 +89,7 @@ void dataImporter::load(std::array<grade, AllGradesArraySize> &arr)
                 to_int(gr["R"])
             };
 
-            g.semester = item["semester"].get<std::string>();
+            
             g.career = item["career"].get<std::string>();
             g.instructor1 = item["instructor1"].get<std::string>();
             g.instructor2 = item["instructor2"].get<std::string>();

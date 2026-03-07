@@ -23,6 +23,9 @@ struct grade
 	std::string course_number; //changed to string
     std::string course_title;
 	std::string section_number;
+	std::string subCor;
+	std::string subCorSec; //got tired of typing the whole thing 
+	std::string subCorSecTermYear;
 	GradeCounts grades;
 	int grades_count;
 	int year;

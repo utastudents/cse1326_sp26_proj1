@@ -15,17 +15,16 @@ struct gradeAnalyzer{
     void printCourse(std::string SubjectID); //prints course numbers within subjectID
     void printCourse(std::string SubjectID, std::string CourseNumber); //prints all sections within
 
-    //the flunkers AKA <C grade
-    void findWeedOuts(); //prints overall lowest
-    void findWeedOuts(std::string SubjectID); //prints lowest within Subject
-    void findWeedOuts(std::string SubjectID, std::string CourseNumber);//prints lowest within course
-    //opposite of weedOuts >=C
-    void findExemplary(); //prints highest overall
-    void findExemplary(std::string SubjectID); //prints highest within subject
-    void findExemplary(std::string SubjectID, std::string CourseNumber);//prints highest within course 
-
+    //the flunkers AKA <C grade                                         //if 1 -> find weedouts else find best
+    void findPercents(bool findLowest); //prints overall lowest
+    void findPercents(std::string SubjectID, bool findLowest); //prints lowest within Subject
+    void findPercents(std::string SubjectID, std::string CourseNumber, bool findLowest);//prints lowest within course
+   
     std::array<grade, AllGradesArraySize>& m_gradesArray; //reference to main grade array
+    std::array<grade*, AllGradesArraySize> sortedGrades; //a new ptr array that we have sorted 
+
     //no need for checked boolean array with the way were processing stuff
 };
 // there are 134 unique subject ids
 // 3753 unique course numbers
+// there's a max of 761 sections within a course
