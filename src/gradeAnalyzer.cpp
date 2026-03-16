@@ -22,7 +22,6 @@ const int MAX_COURSE = 3753; // number of unique courses
 std::array<std::string, MAX_SUBJECT> subjectName; //the string array correlates with the int array
 std::array<int, MAX_SUBJECT> subjectSectionBegin; //an array to have number of sections within the subject
 
-//std::array<int, MAX_SUBJECT> courseInSubject; //used to find max number of courses within a subject
 
 std::array<std::string, MAX_COURSE> courseName;
 std::array<int, MAX_COURSE> courseSectionBegin;
@@ -87,17 +86,6 @@ gradeAnalyzer::gradeAnalyzer(std::array<grade, AllGradesArraySize>& gradesArr):m
         //for(int i = MAX_SUBJECT-10; i < MAX_SUBJECT; i++)std::cout << i << ". " << subjectName[i] << "\t" << subjectSectionBegin[i] << "\n"; //shows end    
 
     }
-    /*{ used to find max number of courses within a section
-    
-        for(grade& g: m_gradesArray)
-        {
-            courseInSubject[containsSubject(subjectName, g.subject_id)]++;
-        }
-        int highest;
-        for(int i = 0; i < MAX_SUBJECT; i++)if(courseInSubject[i] > highest)
-                highest = i;
-        std::cout << "Highest num of course in a subject: " << courseInSubject[highest] << " " << subjectName[highest] << "\n";
-    }*/
     { // organizes course names alphabeticly and collects array of how many sections per course
         std::fill(courseName.begin(), courseName.end(), std::to_string(INT_MIN));
         std::fill(courseSectionBegin.begin(), courseSectionBegin.end(), 1);
