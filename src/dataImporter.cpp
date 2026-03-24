@@ -1,1 +1,108 @@
 #include "dataImporter.hpp"
+#include <string>
+#include <iostream>
+#include <fstream>
+
+//Some pieces of json file 
+//to prevent problems
+auto to_int = [](const json& v)
+{
+    if (v.is_number()) 
+        return v.get<int>();
+    if (v.is_string()) 
+        return std::stoi(v.get<std::string>());
+    return 0;
+};
+//to prevent problems 
+auto to_double = [](const json& v) 
+{
+    if (v.is_number()) 
+    {
+        return v.get<double>();
+    }
+    if (v.is_string())
+    { 
+        return std::stod(v.get<std::string>());
+    }
+    return 0.0;
+};
+
+
+dataImporter::dataImporter(const std::string& _filename): 
+filename(_filename), file(_filename)
+{
+    if(!file.is_open())
+        std::cerr << "Failed to open file: " << filename << "\n";
+}
+
+void dataImporter::load(std::array<grade, AllGradesArraySize> &arr)
+{
+    json j;
+
+    if(!file.is_open()) //checking if ifstream file is open
+    {
+        std::cerr << "File not open\n";
+        return;
+    }
+    try
+    {
+        file >> j;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "JSON parse error:" << e.what() << "\n";
+        return;
+    }
+
+    int count = 0;
+
+    for (const auto& group : j)
+    {
+        for (const auto& item : group)
+        {
+            grade g(1);  // constructor increments static counter
+
+            g.subject_id = item["subject_id"].get<std::string>();
+            g.course_number = std::to_string(to_int(item["course_number"]));
+            g.grades_count  = to_int(item["grades_count"]);
+            g.year          = to_int(item["year"]);
+            g.semester = item["semester"].get<std::string>();
+            g.section_number = item["section_number"].get<std::string>(); 
+            //yes some section numbers come out different as single digits, thats just how they are in the json
+            g.subCor = g.subject_id + " " + g.course_number;
+            g.subCorSec = g.subCor + " " + g.section_number; 
+            g.subCorSecTermYear = g.subCorSec + " " + g.semester + " " + std::to_string(g.year);
+
+            const auto& gr = item["grades"];
+
+            g.grades = {
+                to_int(gr["A"]),
+                to_int(gr["B"]),
+                to_int(gr["C"]),
+                to_int(gr["D"]),
+                to_int(gr["F"]),
+                to_int(gr["I"]),
+                to_int(gr["P"]),
+                to_int(gr["Q"]),
+                to_int(gr["W"]),
+                to_int(gr["Z"]),
+                to_int(gr["R"])
+            };
+
+            
+            g.career = item["career"].get<std::string>();
+            g.instructor1 = item["instructor1"].get<std::string>();
+            g.instructor2 = item["instructor2"].get<std::string>();
+            g.instructor3 = item["instructor3"].get<std::string>();
+            g.instructor4 = item["instructor4"].get<std::string>();
+            g.instructor5 = item["instructor5"].get<std::string>();
+            g.course_gpa   = to_double(item["course_gpa"]);
+            g.drop_percent = to_double(item["drop_percent"]);
+            
+            arr[count] = g;   // copy into array
+            count++;
+        }
+    }
+
+   return;
+}
