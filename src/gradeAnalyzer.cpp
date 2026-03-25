@@ -225,8 +225,8 @@ void gradeAnalyzer::printCourse(std::string SubjectID) //prints course numbers w
 }
 void gradeAnalyzer::printCourse(std::string SubjectID, std::string CourseNumber) //prints all sections within
 {
-    int start;
-    int end;
+    int start = 0;
+    int end = 0;
     int totalSections = 0;
     std::string search = SubjectID + " " + CourseNumber; 
     for(int i = 0; i <= MAX_COURSE; i++)

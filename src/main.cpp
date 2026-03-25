@@ -10,6 +10,28 @@
 
 std::array<grade, AllGradesArraySize> gradesArray;
 
+std::vector<grade> simple_find(std::string year = "", std::string course = "", int courseID = -1, int courseSection = -1)
+{
+	std::vector<grade> GradeDataVec(100);
+	if (year.empty())
+	{
+		std::cout << "No year given" << std::endl;
+	}
+	if (course.empty())
+	{
+		std::cout << "No Course given" << std::endl;
+	}
+	if (courseID == -1)
+	{
+		std::cout << "No Course ID given" << std::endl;
+	}
+	if (courseSection == -1)
+	{
+		std::cout << "No Course Section given" << std::endl;
+	}
+
+	return GradeDataVec;
+}
 
 int main(int argc, char* argv[])
 {

@@ -9,7 +9,7 @@
 
 struct gradeAnalyzer{
 
-    gradeAnalyzer( std::array<grade, AllGradesArraySize>& gradesArr);
+    gradeAnalyzer(std::array<grade, AllGradesArraySize>& gradesArr);
     
     void printCourse(); //prints subjects
     void printCourse(std::string SubjectID); //prints course numbers within subjectID
