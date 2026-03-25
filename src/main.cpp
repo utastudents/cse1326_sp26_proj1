@@ -10,16 +10,20 @@
 
 std::array<grade, AllGradesArraySize> gradesArray;
 
-std::vector<grade> simple_find(std::string year = "", std::string course = "", int courseID = -1, int courseSection = -1)
+std::vector<grade> simple_find(std::array<grade, AllGradesArraySize> &arr, int year = -1, std::string course = "", int courseID = -1, int courseSection = -1)
 {
 	std::vector<grade> GradeDataVec(100);
-	if (year.empty())
+	if (year != -1)
 	{
-		std::cout << "No year given" << std::endl;
+		// take year given and search grade struct array
+		std::cout << year << " year given" << std::endl;
+		// print out each index that matches the provided year
 	}
 	if (course.empty())
 	{
+		// take course given and search grade struct array
 		std::cout << "No Course given" << std::endl;
+		// print out each index that matches the provided course
 	}
 	if (courseID == -1)
 	{
@@ -40,6 +44,7 @@ int main(int argc, char* argv[])
 	dataImporter DI(filename);  // DI is Data Importer....
 	DI.load(gradesArray); // Copys Data into array of grade
 	gradeAnalyzer analyzer(gradesArray);
+	simple_find(gradesArray, 1973);
 	// command processor
 	std::cout << "Welcome to the command line MavGrades" << std::endl;
 	std::string cmd;
