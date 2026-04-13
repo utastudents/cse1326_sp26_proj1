@@ -1,48 +1,53 @@
 #include "grade.hpp"
 #include "dataImporter.hpp"
-#include "gradeAnalyzer.hpp"
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
 
-// ulimit -s unlimited
-// ^ here just incase
-
-std::array<grade, AllGradesArraySize> gradesArray;
-
-std::vector<grade> simple_find(std::array<grade, AllGradesArraySize> &arr, int year = -1, std::string course = "", int courseID = -1, int courseSection = -1)
-{
-	std::vector<grade> GradeDataVec(100);
-	if (year != -1)
-	{
-		// take year given and search grade struct array
-		std::cout << year << " year given" << std::endl;
-		// print out each index that matches the provided year
-	}
-	if (course.empty())
-	{
-		// take course given and search grade struct array
-		std::cout << "No Course given" << std::endl;
-		// print out each index that matches the provided course
-	}
-	if (courseID == -1)
-	{
-		std::cout << "No Course ID given" << std::endl;
-	}
-	if (courseSection == -1)
-	{
-		std::cout << "No Course Section given" << std::endl;
-	}
-
-	return GradeDataVec;
-}
+std::vector<grade> gradesVect;
 
 int main(int argc, char* argv[])
 {
-	// create a dataImporter
-	std::string filename = "allgradedata.json";
-	dataImporter DI(filename);  // DI is Data Importer....
-	DI.load(gradesArray); // Copys Data into array of grade
+        // create a dataImporter
+        std::string filename = "allgradedata.json";
+        dataImporter DI(filename);  // DI is Data Importer....
+        DI.load(gradesVect); // Copys Data into array of grade
+        std::cout << gradesVect.size() << " records read." << std::endl;
+
+
+        std::vector<grade> filteredResults;
+        for (const auto& r : gradesVect) 
+        {
+           if ((r.subject_id == "CSE") && (r.course_number == "3318")) 
+           { 
+               filteredResults.push_back(r);
+           }
+        }
+
+	// want to sort based on pass percentage
+        std::sort(filteredResults.begin(), filteredResults.end(), [](const grade& a, const grade& b) {
+                                                   return float(a.grades.A+a.grades.B+a.grades.C) / a.grades_count < float(b.grades.A+b.grades.B+b.grades.C) / b.grades_count;});
+	// A,B,C,D,F,I,P,Q,W,Z,R;
+        std::cout << "found " << filteredResults.size() << " matches" << std::endl;
+        for (auto &i : filteredResults)
+        {
+           std::cout << i.subject_id << i.course_number << '\t' << i.course_title;
+           std::cout << i.semester << '\t'  << i.year << '\t' << i.instructor1.substr(0,15) << '\t';
+	   std::cout << '\t' << i.grades_count ;
+	   std::cout << std::fixed << std::setprecision(4);
+	   std::cout << '\t' << float(i.grades.A+i.grades.B+i.grades.C) / i.grades_count << '%';
+           std::cout << '\t' << float(i.grades.A) / i.grades_count;
+           std::cout << '\t' << float(i.grades.B) / i.grades_count;
+           std::cout << '\t' << float(i.grades.C) / i.grades_count;
+           std::cout << '\t' << float(i.grades.D) / i.grades_count;
+           std::cout << '\t' << float(i.grades.F) / i.grades_count;
+           std::cout << std::endl;
+           //i.print();
+        }
+
+#if 0	
 	gradeAnalyzer analyzer(gradesArray);
 	simple_find(gradesArray, 1973);
 	// command processor
@@ -115,7 +120,7 @@ int main(int argc, char* argv[])
 			std::cout << "Unknown command. Type 'help' for a list of commands." << std::endl;
 		}
 	}
-
+#endif
 	// clean up
 	return 0;
 }

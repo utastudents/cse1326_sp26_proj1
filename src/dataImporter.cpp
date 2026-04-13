@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+using json = nlohmann::json;
 
 //Some pieces of json file 
 //to prevent problems
@@ -35,7 +36,7 @@ filename(_filename), file(_filename)
         std::cerr << "Failed to open file: " << filename << "\n";
 }
 
-void dataImporter::load(std::array<grade, AllGradesArraySize> &arr)
+void dataImporter::load(std::vector<grade> &v)
 {
     json j;
 
@@ -99,7 +100,7 @@ void dataImporter::load(std::array<grade, AllGradesArraySize> &arr)
             g.course_gpa   = to_double(item["course_gpa"]);
             g.drop_percent = to_double(item["drop_percent"]);
             
-            arr[count] = g;   // copy into array
+            v.push_back(g);   // copy into array
             count++;
         }
     }
