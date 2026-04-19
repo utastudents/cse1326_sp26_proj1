@@ -14,6 +14,9 @@
 #include <gtkmm/box.h>
 #include <gtkmm/stringlist.h>
 #include <gtkmm/label.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/textview.h>
+#include <gtkmm/scrolledwindow.h>
 
 class MainWindow: public Gtk::Window
 {
@@ -25,7 +28,10 @@ protected:
     // Signal handler:
     void on_dropdown_changed();
 
-    Gtk::Box m_totals_box;
+    Gtk::Grid m_grid;
+
+    Gtk::TextView m_text_view;
+    Gtk::ScrolledWindow m_scrolled_window;
     Gtk::Box m_box;
 
     // Child widgets:
@@ -40,11 +46,13 @@ protected:
     Gtk::DropDown m_SubjectDropDown;
 
     void Select();
+    void Filter();
     Glib::RefPtr<Gtk::StringList> m_courseStringList;
     Glib::RefPtr<Gtk::StringList> m_yearStringList;
     Glib::RefPtr<Gtk::StringList> m_instructorStringList;
     Glib::RefPtr<Gtk::StringList> m_subjectStringList;
     std::vector<grade> m_gradesVect;
+    std::vector<grade> m_gradesVectFiltered;
 
 };
 
