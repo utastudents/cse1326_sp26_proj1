@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <set>
 
 std::vector<grade> gradesVect;
 
@@ -17,10 +18,28 @@ int main(int argc, char* argv[])
         std::cout << gradesVect.size() << " records read." << std::endl;
 
 
+        std::set<std::string> subjects;
+        std::set<std::string> instructors;
+	std::set<std::string> subjects_plus_course_number;
+	// put them in a set, to get all the possibilities
+        for (const auto& r : gradesVect) 
+        {
+		instructors.insert(r.instructor1);
+		subjects.insert(r.subject_id);
+		subjects_plus_course_number.insert(r.subject_id+r.course_number);
+	}
+#if 0
+        std::cout << "the number of subjects is " << subjects.size() << std::endl;
+
+        for (const auto& i : subjects_plus_course_number ) 
+	{
+                std::cout << i << " " << std::endl;
+        }
+#endif
         std::vector<grade> filteredResults;
         for (const auto& r : gradesVect) 
         {
-           if ((r.subject_id == "CSE") && (r.course_number == "3318")) 
+           if ((r.subject_id == "CSE") && (r.course_number == "3310")) 
            { 
                filteredResults.push_back(r);
            }
