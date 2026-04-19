@@ -8,15 +8,15 @@ MainWindow::MainWindow()
     // create a dataImporter
     std::string filename = "allgradedata.json";
     dataImporter DI(filename);  // DI is Data Importer....
-    DI.load(gradesVect); // Copys Data into array of grade
-    std::cout << gradesVect.size() << " records read." << std::endl;
+    DI.load(m_gradesVect); // Copys Data into array of grade
+    std::cout << m_gradesVect.size() << " records read." << std::endl;
 
     std::set < int > years;
     std::set < std::string > subjects;
     std::set < std::string > instructors;
     std::set < std::string > subjects_plus_course_number;
     // put them in a set, to get all the possibilities
-    for (const auto &r : gradesVect)
+    for (const auto &r : m_gradesVect)
     {
 	years.insert(r.year);
         instructors.insert(r.instructor1);
@@ -50,10 +50,18 @@ MainWindow::MainWindow()
     }
 
 
-
+    // window 
     set_default_size(200, 400);
     set_child(m_box);
     m_box.append(m_CourseDropDown);
+
+    //Gtk::Label m_YearTotalsLabel;
+    //Gtk::Label m_SubjectTotalsLabel;
+    //Gtk::Label m_CourseTotalsLabel;
+    //Gtk::Label m_InstructorTotalsLabel;
+
+    Gtk::Label m_YearTotalsLabel = Gtk::Label(std::to_string(years.size()));
+    m_box.append(m_YearTotalsLabel);
 
     m_courseStringList = Gtk::StringList::create(strings);
     m_CourseDropDown.set_model(m_courseStringList);

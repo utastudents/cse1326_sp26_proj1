@@ -8,11 +8,6 @@ clmg: src/main.cpp src/grade.cpp src/dataImporter.cpp
 guimg: src/guimain.cpp src/grade.cpp src/dataImporter.cpp src/mainwindow.cpp
 	${CXX} $^ ${CXXFLAGS}  `pkg-config gtkmm-4.0 --cflags --libs` -o $@
 
-dropdown:./src/examplewindow.cpp ./src/guimain.cpp
-	${CXX} $^ ${CXXFLAGS} `pkg-config gtkmm-4.0 --cflags --libs` -o $@
-
-
 clean:
 	rm -f clmg
 	rm -f guimg
-	rm -f dropdown
