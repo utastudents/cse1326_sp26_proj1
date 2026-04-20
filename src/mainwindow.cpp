@@ -142,6 +142,12 @@ void MainWindow::Filter()
 
 }
 
+std::vector<int> CalculateTotals(std::vector<grade> v)
+{
+	std::vector<int> t;
+	return t;
+}
+
 void MainWindow::Select()
 {
 }

@@ -40,6 +40,11 @@ protected:
     Gtk::Label m_CourseTotalsLabel;
     Gtk::Label m_InstructorTotalsLabel;
 
+    Gtk::Label m_FileYearTotalsLabel;
+    Gtk::Label m_FileSubjectTotalsLabel;
+    Gtk::Label m_FileCourseTotalsLabel;
+    Gtk::Label m_FileInstructorTotalsLabel;
+
     Gtk::DropDown m_CourseDropDown;
     Gtk::DropDown m_InstructorDropDown;
     Gtk::DropDown m_YearDropDown;
@@ -47,6 +52,10 @@ protected:
 
     void Select();
     void Filter();
+    std::vector<int> CalculateTotals(std::vector<grade> v);
+
+    void SetFileTotals();
+    void SetFilteredTotals();
     Glib::RefPtr<Gtk::StringList> m_courseStringList;
     Glib::RefPtr<Gtk::StringList> m_yearStringList;
     Glib::RefPtr<Gtk::StringList> m_instructorStringList;
