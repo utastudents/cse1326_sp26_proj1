@@ -17,6 +17,7 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/scrolledwindow.h>
+typedef std::vector<int> totalVec;
 
 class MainWindow: public Gtk::Window
 {
@@ -45,6 +46,9 @@ protected:
     Gtk::Label m_FileCourseTotalsLabel;
     Gtk::Label m_FileInstructorTotalsLabel;
 
+    Gtk::Label m_original;
+    Gtk::Label m_filtered;
+
     Gtk::DropDown m_CourseDropDown;
     Gtk::DropDown m_InstructorDropDown;
     Gtk::DropDown m_YearDropDown;
@@ -52,7 +56,12 @@ protected:
 
     void Select();
     void Filter();
-    std::vector<int> CalculateTotals(std::vector<grade> v);
+
+    totalVec CalculateTotals(std::vector<grade> v);
+    void SetFileTotals(totalVec v);
+    void SetFilteredTotals(totalVec v);
+    totalVec m_origFileTotals;
+    totalVec m_filteredFileTotals;
 
     void SetFileTotals();
     void SetFilteredTotals();
