@@ -1,6 +1,7 @@
 #include "mainwindow.hpp"
 #include <iostream>
 
+extern volatile int block;
 MainWindow::MainWindow()
 {
     set_title("DropDown example");
@@ -53,16 +54,16 @@ MainWindow::MainWindow()
 
 
     // Connect signal handler:
-    m_CourseDropDown.property_selected().signal_changed().connect(
+ conobj1 = m_CourseDropDown.property_selected().signal_changed().connect(
             sigc::mem_fun(*this, &MainWindow::on_dropdown_changed));
 
-    m_YearDropDown.property_selected().signal_changed().connect(
+ conobj2 = m_YearDropDown.property_selected().signal_changed().connect(
             sigc::mem_fun(*this, &MainWindow::on_dropdown_changed));
 
-    m_InstructorDropDown.property_selected().signal_changed().connect(
+ conobj3 = m_InstructorDropDown.property_selected().signal_changed().connect(
             sigc::mem_fun(*this, &MainWindow::on_dropdown_changed));
 
-    m_SubjectDropDown.property_selected().signal_changed().connect(
+ conobj4 = m_SubjectDropDown.property_selected().signal_changed().connect(
             sigc::mem_fun(*this, &MainWindow::on_dropdown_changed));
 }
 
@@ -85,11 +86,12 @@ void MainWindow::Filter()
             m_gradesVectFiltered.push_back(r);
         }
     }
-
+    //SetFilteredTotals(CalculateTotals(m_gradesVectFiltered));
 }
 
 totalVec  MainWindow::CalculateTotals(std::vector<grade> v)
 {
+	std::cout << "in calculate totals" << std::endl;
     std::set<int> years;
     std::set < std::string > subjects;
     std::set < std::string > instructors;
@@ -129,18 +131,32 @@ totalVec  MainWindow::CalculateTotals(std::vector<grade> v)
     }
 
     // this is a problem
+    if (m_courseStringList)
+    {
+	    std::cout << "items in list" << m_courseStringList->get_n_items() << std::endl;
+       std::cout << "deleting courseStringList" << std::endl;
+       m_courseStringList->splice(0, m_courseStringList->get_n_items(), {});
+	    std::cout << "items in list" << m_courseStringList->get_n_items() << std::endl;
+    }
+    std::cout << "making new list" << std::endl;
     m_courseStringList = Gtk::StringList::create(strings);
     m_CourseDropDown.set_model(m_courseStringList);
     m_CourseDropDown.set_selected(0);
-
+	    std::cout << "items in new list" << m_courseStringList->get_n_items() << std::endl;
+    if (m_yearStringList)
+         m_yearStringList->splice(0, m_yearStringList->get_n_items(), {});
     m_yearStringList = Gtk::StringList::create(yearStrings);
     m_YearDropDown.set_model(m_yearStringList);
     m_YearDropDown.set_selected(0);
 
+    if (m_instructorStringList)
+        m_instructorStringList->splice(0, m_instructorStringList->get_n_items(), {});
     m_instructorStringList = Gtk::StringList::create(instructorStrings);
     m_InstructorDropDown.set_model(m_instructorStringList);
     m_InstructorDropDown.set_selected(0);
 
+    if (m_subjectStringList)
+     m_subjectStringList->splice(0, m_subjectStringList->get_n_items(), {});
     m_subjectStringList = Gtk::StringList::create(subjectStrings);
     m_SubjectDropDown.set_model(m_subjectStringList);
     m_SubjectDropDown.set_selected(0);
@@ -172,15 +188,17 @@ void MainWindow::SetFilteredTotals(totalVec v)
 
 void MainWindow::Select()
 {
+
 }
 
+int count=0;
 void MainWindow::on_dropdown_changed()
 {
-	static int x=0;
-	x++;
-    m_YearTotalsLabel.set_text(std::to_string(x));
-    std::cout << "the label value is " << std::to_string(x) << std::endl;
-    const auto selected = m_CourseDropDown.get_selected();
-    std::cout << "DropDown changed: Row=" << selected << ", String="
-            << m_courseStringList->get_string(selected) << std::endl;
+	count++;
+    //const auto selected = m_CourseDropDown.get_selected();
+    //std::cout << "DropDown changed: Row=" << selected << ", String="
+    //        << m_courseStringList->get_string(selected) << std::endl;
+    Filter();
+    std::cout << "leaving the signal handler " << count << std::endl;
+    return; 
 }

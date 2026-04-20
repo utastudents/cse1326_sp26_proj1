@@ -1,5 +1,6 @@
 #include "mainwindow.hpp"
 #include <gtkmm/application.h>
+volatile int block = 0;
 
 int main(int argc, char* argv[])
 {

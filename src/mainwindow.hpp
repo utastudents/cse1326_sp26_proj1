@@ -29,6 +29,11 @@ protected:
     // Signal handler:
     void on_dropdown_changed();
 
+    sigc::connection conobj1;
+    sigc::connection conobj2;
+    sigc::connection conobj3;
+    sigc::connection conobj4;
+
     Gtk::Grid m_grid;
 
     Gtk::TextView m_text_view;
