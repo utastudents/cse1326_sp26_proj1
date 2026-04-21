@@ -15,8 +15,7 @@
 #include <gtkmm/stringlist.h>
 #include <gtkmm/label.h>
 #include <gtkmm/grid.h>
-#include <gtkmm/textview.h>
-#include <gtkmm/scrolledwindow.h>
+
 typedef std::vector<int> totalVec;
 
 class MainWindow: public Gtk::Window
@@ -29,15 +28,13 @@ protected:
     // Signal handler:
     void on_dropdown_changed();
 
-    sigc::connection conobj1;
-    sigc::connection conobj2;
-    sigc::connection conobj3;
-    sigc::connection conobj4;
+    sigc::connection m_conobj1;
+    sigc::connection m_conobj2;
+    sigc::connection m_conobj3;
+    sigc::connection m_conobj4;
 
     Gtk::Grid m_grid;
 
-    Gtk::TextView m_text_view;
-    Gtk::ScrolledWindow m_scrolled_window;
     Gtk::Box m_box;
 
     // Child widgets:
@@ -54,7 +51,7 @@ protected:
     Gtk::Label m_original;
     Gtk::Label m_filtered;
 
-    Gtk::DropDown m_CourseDropDown;
+    Gtk::DropDown *m_CourseDropDown;
     Gtk::DropDown m_InstructorDropDown;
     Gtk::DropDown m_YearDropDown;
     Gtk::DropDown m_SubjectDropDown;

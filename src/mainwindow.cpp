@@ -1,10 +1,8 @@
 #include "mainwindow.hpp"
 #include <iostream>
 
-extern volatile int block;
 MainWindow::MainWindow()
 {
-    set_title("DropDown example");
     std::cout << "Opening the mavgrades file" << std::endl;
     // create a dataImporter
     std::string filename = "allgradedata.json";
@@ -54,17 +52,17 @@ MainWindow::MainWindow()
 
 
     // Connect signal handler:
- conobj1 = m_CourseDropDown.property_selected().signal_changed().connect(
+ m_conobj1 = m_CourseDropDown.property_selected().signal_changed().connect(
             sigc::mem_fun(*this, &MainWindow::on_dropdown_changed));
 
- conobj2 = m_YearDropDown.property_selected().signal_changed().connect(
-            sigc::mem_fun(*this, &MainWindow::on_dropdown_changed));
+ //m_conobj2 = m_YearDropDown.property_selected().signal_changed().connect(
+ //           sigc::mem_fun(*this, &MainWindow::on_dropdown_changed));
 
- conobj3 = m_InstructorDropDown.property_selected().signal_changed().connect(
-            sigc::mem_fun(*this, &MainWindow::on_dropdown_changed));
+ //m_conobj3 = m_InstructorDropDown.property_selected().signal_changed().connect(
+ //           sigc::mem_fun(*this, &MainWindow::on_dropdown_changed));
 
- conobj4 = m_SubjectDropDown.property_selected().signal_changed().connect(
-            sigc::mem_fun(*this, &MainWindow::on_dropdown_changed));
+ //m_conobj4 = m_SubjectDropDown.property_selected().signal_changed().connect(
+ //           sigc::mem_fun(*this, &MainWindow::on_dropdown_changed));
 }
 
 MainWindow::~MainWindow()
@@ -79,6 +77,7 @@ void MainWindow::Filter()
     //       then subj
     //       then course
     //       then instructor
+    m_gradesVectFiltered.clear();
     for (const auto &r : m_gradesVect)
     {
         if ((r.subject_id == "CSE") && (r.course_number == "3310"))
@@ -86,12 +85,36 @@ void MainWindow::Filter()
             m_gradesVectFiltered.push_back(r);
         }
     }
-    //SetFilteredTotals(CalculateTotals(m_gradesVectFiltered));
+    std::cout << "the number in the filtered list is " << m_gradesVectFiltered.size() << std::endl;
+
+
+          for (auto &i :m_gradesVectFiltered )
+        {
+           std::cout << i.subject_id << i.course_number << '\t' << i.course_title;
+           std::cout << i.semester << '\t'  << i.year << '\t' << i.instructor1.substr(0,15) << '\t';
+	   std::cout << '\t' << i.grades_count ;
+	   std::cout << std::fixed << std::setprecision(4);
+	   std::cout << '\t' << float(i.grades.A+i.grades.B+i.grades.C) / i.grades_count << '%';
+           std::cout << '\t' << float(i.grades.A) / i.grades_count;
+           std::cout << '\t' << float(i.grades.B) / i.grades_count;
+           std::cout << '\t' << float(i.grades.C) / i.grades_count;
+           std::cout << '\t' << float(i.grades.D) / i.grades_count;
+           std::cout << '\t' << float(i.grades.F) / i.grades_count;
+           std::cout << std::endl;
+           //i.print();
+        }
+
+    m_filteredFileTotals = CalculateTotals(m_gradesVectFiltered);
+    std::cout << "after calculate totals " << std::endl;
+    std::cout << "filtered file totals "; 
+    for (auto i:m_filteredFileTotals)
+	    std::cout << i << " ";
+    std::cout << std::endl;
+    SetFilteredTotals(m_filteredFileTotals);
 }
 
 totalVec  MainWindow::CalculateTotals(std::vector<grade> v)
 {
-	std::cout << "in calculate totals" << std::endl;
     std::set<int> years;
     std::set < std::string > subjects;
     std::set < std::string > instructors;
@@ -130,19 +153,18 @@ totalVec  MainWindow::CalculateTotals(std::vector<grade> v)
         subjectStrings.push_back(i);
     }
 
+    m_conobj1.block();
     // this is a problem
-    if (m_courseStringList)
+    //if (m_courseStringList==nullptr)
     {
-	    std::cout << "items in list" << m_courseStringList->get_n_items() << std::endl;
-       std::cout << "deleting courseStringList" << std::endl;
-       m_courseStringList->splice(0, m_courseStringList->get_n_items(), {});
-	    std::cout << "items in list" << m_courseStringList->get_n_items() << std::endl;
+       //m_courseStringList->splice(0, m_courseStringList->get_n_items(), {});
+       m_courseStringList=nullptr;
+       m_courseStringList = Gtk::StringList::create(strings);
+       m_CourseDropDown.set_model(m_courseStringList);
+       m_CourseDropDown.set_selected(0);
     }
-    std::cout << "making new list" << std::endl;
-    m_courseStringList = Gtk::StringList::create(strings);
-    m_CourseDropDown.set_model(m_courseStringList);
-    m_CourseDropDown.set_selected(0);
-	    std::cout << "items in new list" << m_courseStringList->get_n_items() << std::endl;
+    m_conobj1.unblock();
+#if 0
     if (m_yearStringList)
          m_yearStringList->splice(0, m_yearStringList->get_n_items(), {});
     m_yearStringList = Gtk::StringList::create(yearStrings);
@@ -160,6 +182,7 @@ totalVec  MainWindow::CalculateTotals(std::vector<grade> v)
     m_subjectStringList = Gtk::StringList::create(subjectStrings);
     m_SubjectDropDown.set_model(m_subjectStringList);
     m_SubjectDropDown.set_selected(0);
+#endif
 
     std::vector<int> t;
     t.push_back(years.size());
@@ -180,6 +203,7 @@ void MainWindow::SetFileTotals(totalVec v)
 
 void MainWindow::SetFilteredTotals(totalVec v)
 {
+	std::cout << "setting labels " <<  std::to_string(v[3]) <<  std::endl;
     m_YearTotalsLabel.set_text(std::to_string(v[0]));
     m_SubjectTotalsLabel.set_text(std::to_string(v[1]));
     m_InstructorTotalsLabel.set_text(std::to_string(v[2]));
