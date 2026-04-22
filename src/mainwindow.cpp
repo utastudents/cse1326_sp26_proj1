@@ -1,10 +1,17 @@
 #include "mainwindow.hpp"
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 #include <glibmm.h>
 
+MainWindow::MainWindow() : m_VBox(Gtk::Orientation::VERTICAL),
+                           m_Button_Quit("_Quit", true),
+                           m_Button_Buffer1("Use buffer 1"),
+                           m_Button_Buffer2("Use buffer 2"),
+                           m_year_search_valid{false},
+                           m_subject_search_valid{false},
+                           m_instructor_search_valid{false}
 
-
-MainWindow::MainWindow() : m_year_search_valid{false}
 {
     std::cout << "Opening the mavgrades file" << std::endl;
     // create a dataImporter
@@ -18,7 +25,7 @@ MainWindow::MainWindow() : m_year_search_valid{false}
     // the same as the original file (in a vector).  make it so.
     m_gradesVectFiltered = m_gradesVect;
 
-    // figure out the contents of the drop downs
+    // figure out (and set) the contents of the drop downs
     BuildDropDowns(m_gradesVect);
 
     // set the labels
@@ -28,30 +35,41 @@ MainWindow::MainWindow() : m_year_search_valid{false}
 
     // window
     set_default_size(200, 450);
+    ////////////////////////
+    set_title("Gtk::TextView example");
+    set_default_size(400, 200);
 
-    // set up the grid
-    m_grid.set_halign(Gtk::Align::START);
-    m_grid.set_valign(Gtk::Align::START);
-    m_grid.set_hexpand(true);
-    m_grid.set_vexpand(true);
+    m_VBox.set_margin(5);
+    set_child(m_VBox);
 
-    set_child(m_grid);
-    m_grid.attach(m_original, 0, 0);
-    m_grid.attach(m_FileYearTotalsLabel, 1, 0);
-    m_grid.attach(m_FileSubjectTotalsLabel, 2, 0);
-    m_grid.attach(m_FileCourseTotalsLabel, 3, 0);
-    m_grid.attach(m_FileInstructorTotalsLabel, 4, 0);
-    m_grid.attach(m_YearDropDown, 1, 1);
-    m_grid.attach(m_SubjectDropDown, 2, 1);
-    m_grid.attach(m_CourseDropDown, 3, 1);
-    m_grid.attach(m_InstructorDropDown, 4, 1);
-    m_grid.attach(m_filtered, 0, 2);
-    m_grid.attach(m_YearTotalsLabel, 1, 2);
-    m_grid.attach(m_SubjectTotalsLabel, 2, 2);
-    m_grid.attach(m_CourseTotalsLabel, 3, 2);
-    m_grid.attach(m_InstructorTotalsLabel, 4, 2);
+    // Add the TreeView, inside a ScrolledWindow, with the button underneath:
+    m_ScrolledWindow.set_child(m_TextView);
 
-    // Connect signal handler:
+    // Only show the scrollbars when they are necessary:
+    m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
+    m_ScrolledWindow.set_expand();
+
+    m_VBox.append(m_DropDownBox);
+    m_VBox.append(m_ScrolledWindow);
+    m_VBox.append(m_ButtonBox);
+
+    m_DropDownBox.append(m_YearDropDown);
+    m_DropDownBox.append(m_SubjectDropDown);
+    m_DropDownBox.append(m_CourseDropDown);
+    m_DropDownBox.append(m_InstructorDropDown);
+
+    m_Button_Buffer1.set_hexpand(true);
+    m_Button_Buffer1.set_halign(Gtk::Align::END);
+
+    m_ButtonBox.append(m_Button_Buffer1);
+    m_ButtonBox.append(m_Button_Buffer2);
+    m_ButtonBox.append(m_Button_Quit);
+    m_ButtonBox.set_margin(5);
+    m_ButtonBox.set_spacing(5);
+
+     Filter();
+
+    // Connect signal handler(s):
 
     m_YearDropDown.property_selected().signal_changed().connect(
         [this]()
@@ -69,12 +87,24 @@ MainWindow::MainWindow() : m_year_search_valid{false}
     m_SubjectDropDown.property_selected().signal_changed().connect(
         [this]()
         {
-            const auto selected = m_YearDropDown.get_selected();
+            const auto selected = m_SubjectDropDown.get_selected();
             std::cout << "DropDown changed: Row=" << selected << ", String="
                       << m_subjectStringList->get_string(selected) << std::endl;
             m_subject_search_valid = true;
             m_subject_search_key = m_subjectStringList->get_string(selected);
-            std::cout << "subject valid = " << m_subject_search_valid << " year search key = " << m_subject_search_key << std::endl;
+            std::cout << "subject valid = " << m_subject_search_valid << " subject search key = " << m_subject_search_key << std::endl;
+
+            Filter();
+        });
+         m_InstructorDropDown.property_selected().signal_changed().connect(
+        [this]()
+        {
+            const auto selected = m_InstructorDropDown.get_selected();
+            std::cout << "DropDown changed: Row=" << selected << ", String="
+                      << m_instructorStringList->get_string(selected) << std::endl;
+            m_instructor_search_valid = true;
+            m_instructor_search_key = m_subjectStringList->get_string(selected);
+            std::cout << "instructor valid = " << m_instructor_search_valid << " instructor search key = " << m_instructor_search_key << std::endl;
 
             Filter();
         });
@@ -84,6 +114,28 @@ MainWindow::MainWindow() : m_year_search_valid{false}
     // Gtk::DropDown m_SubjectDropDown;
 }
 
+void MainWindow::LoadText(std::vector<grade> &v)
+{
+    std::stringstream S;
+
+    for (auto &i : m_gradesVectFiltered)
+    {
+        S << std::setw(5) << i.subject_id << "\t" << i.course_number << '\t' << i.course_title;
+        S << i.semester << '\t' << std::to_string(i.year)<< '\t' << i.instructor1.substr(0, 15) << '\t';
+        S << '\t' << i.grades_count;
+        S << std::fixed << std::setprecision(4);
+        S << '\t' << float(i.grades.A + i.grades.B + i.grades.C) / i.grades_count << '%';
+        S << '\t' << float(i.grades.A) / i.grades_count;
+        S << '\t' << float(i.grades.B) / i.grades_count;
+        S << '\t' << float(i.grades.C) / i.grades_count;
+        S << '\t' << float(i.grades.D) / i.grades_count;
+        S << '\t' << float(i.grades.F) / i.grades_count;
+        S << std::endl;
+    }
+    m_refTextBuffer1 = Gtk::TextBuffer::create();
+    m_refTextBuffer1->set_text(S.str());
+    m_TextView.set_buffer(m_refTextBuffer1);
+}
 MainWindow::~MainWindow()
 {
 }
@@ -111,6 +163,7 @@ bool MainWindow::Filter()
         }
     }
     std::cout << "the number in the filtered list is " << m_gradesVectFiltered.size() << std::endl;
+    LoadText(m_gradesVectFiltered);
 #if 0
 
           for (auto &i :m_gradesVectFiltered )
@@ -188,10 +241,6 @@ void MainWindow::BuildDropDowns(std::vector<grade> &v)
     m_subjectStringList = Gtk::StringList::create(subjectStrings);
     m_SubjectDropDown.set_model(m_subjectStringList);
     m_SubjectDropDown.set_selected(0);
-}
-
-void MainWindow::Select()
-{
 }
 
 int count = 0;

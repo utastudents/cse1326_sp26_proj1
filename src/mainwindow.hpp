@@ -9,14 +9,7 @@
 #include <algorithm>
 #include <set>
 
-#include <gtkmm/window.h>
-#include <gtkmm/dropdown.h>
-#include <gtkmm/box.h>
-#include <gtkmm/stringlist.h>
-#include <gtkmm/label.h>
-#include <gtkmm/grid.h>
-
-typedef std::vector<int> totalVec;
+#include <gtkmm.h>
 
 class MainWindow : public Gtk::Window
 {
@@ -25,10 +18,17 @@ public:
     ~MainWindow() override;
 
 protected:
-    
-    Gtk::Grid m_grid;
+    Gtk::Box m_VBox;
+    Gtk::Box m_DropDownBox;
+
+    Gtk::Box m_ButtonBox;
+    Gtk::Button m_Button_Quit, m_Button_Buffer1, m_Button_Buffer2;
 
     Gtk::Box m_main_box;
+    Gtk::ScrolledWindow m_ScrolledWindow;
+    Gtk::TextView m_TextView;
+
+    Glib::RefPtr<Gtk::TextBuffer> m_refTextBuffer1, m_refTextBuffer2;
 
     // Child widgets:
     Gtk::Label m_YearTotalsLabel;
@@ -56,10 +56,10 @@ protected:
     std::string m_subject_search_key;
     std::string m_instructor_search_key;
 
-    void Select();
     bool Filter();
 
     void BuildDropDowns(std::vector<grade> &v);
+    void LoadText(std::vector<grade> &v);
 
     Glib::RefPtr<Gtk::StringList> m_courseStringList;
     Glib::RefPtr<Gtk::StringList> m_yearStringList;
