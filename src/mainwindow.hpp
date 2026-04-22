@@ -18,24 +18,17 @@
 
 typedef std::vector<int> totalVec;
 
-class MainWindow: public Gtk::Window
+class MainWindow : public Gtk::Window
 {
 public:
     MainWindow();
     ~MainWindow() override;
 
 protected:
-    // Signal handler:
-    void on_dropdown_changed();
-
-    sigc::connection m_conobj1;
-    sigc::connection m_conobj2;
-    sigc::connection m_conobj3;
-    sigc::connection m_conobj4;
-
+    
     Gtk::Grid m_grid;
 
-    Gtk::Box m_box;
+    Gtk::Box m_main_box;
 
     // Child widgets:
     Gtk::Label m_YearTotalsLabel;
@@ -51,28 +44,27 @@ protected:
     Gtk::Label m_original;
     Gtk::Label m_filtered;
 
-    Gtk::DropDown *m_CourseDropDown;
+    Gtk::DropDown m_CourseDropDown;
     Gtk::DropDown m_InstructorDropDown;
     Gtk::DropDown m_YearDropDown;
     Gtk::DropDown m_SubjectDropDown;
 
+    bool m_year_search_valid;
+    bool m_subject_search_valid;
+    bool m_instructor_search_valid;
+    int m_year_search_key;
+    std::string m_subject_search_key;
+    std::string m_instructor_search_key;
+
     void Select();
-    void Filter();
+    bool Filter();
 
-    totalVec CalculateTotals(std::vector<grade> v);
-    void SetFileTotals(totalVec v);
-    void SetFilteredTotals(totalVec v);
-    totalVec m_origFileTotals;
-    totalVec m_filteredFileTotals;
+    void BuildDropDowns(std::vector<grade> &v);
 
-    void SetFileTotals();
-    void SetFilteredTotals();
     Glib::RefPtr<Gtk::StringList> m_courseStringList;
     Glib::RefPtr<Gtk::StringList> m_yearStringList;
     Glib::RefPtr<Gtk::StringList> m_instructorStringList;
     Glib::RefPtr<Gtk::StringList> m_subjectStringList;
     std::vector<grade> m_gradesVect;
     std::vector<grade> m_gradesVectFiltered;
-
 };
-
